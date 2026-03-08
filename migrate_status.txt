@@ -1,0 +1,7 @@
+
+  Migration name  Batch / Status  
+  2014_10_12_000000_create_users_table  [1] Ran  
+  2024_03_03_000001_create_finance_tables  Pending  
+  2026_03_04_000252_add_type_to_categories_table  Pending  
+  2026_03_04_000753_create_personal_access_tokens_table  Pending  
+

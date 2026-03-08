@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Transaction extends Model
+{
+    protected $fillable = [
+        'description', 'amount', 'date', 'type', 'status', 
+        'account_id', 'to_account_id', 'category_id', 'card_id', 
+        'is_recurring', 'frequency', 'parent_id', 
+        'installment_number', 'total_installments', 'attachment_path'
+    ];
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function card()
+    {
+        return $this->belongsTo(Card::class);
+    }
+}
