@@ -2550,19 +2550,19 @@ function CardsView({ cards, setCards, accounts, fetchData, showToast, showConfir
                     <div className="w-4 h-4 bg-[#ff6b6b]/60 rounded-full -mr-1 mix-blend-screen"></div>
                     <div className="w-4 h-4 bg-[#feca57]/60 rounded-full mix-blend-screen"></div>
                   </div>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity relative z-20">
                     {!isReadOnly && (
                       <>
-                        <button onClick={() => handleEdit(card)} className="p-1.5 bg-zinc-900/10 dark:bg-white/5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-white hover:bg-zinc-600 transition-colors">
+                        <button onClick={(e) => { e.stopPropagation(); handleEdit(card); }} className="p-1.5 bg-zinc-900/10 dark:bg-white/5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-white hover:bg-zinc-600 transition-colors pointer-events-auto cursor-pointer">
                           <Settings size={14} />
                         </button>
-                        <button onClick={() => handleDelete(card.id)} className="p-1.5 bg-zinc-900/10 dark:bg-white/5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-white hover:bg-[#ff7b7b] transition-colors">
+                        <button onClick={(e) => { e.stopPropagation(); handleDelete(card.id); }} className="p-1.5 bg-zinc-900/10 dark:bg-white/5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-white hover:bg-[#ff7b7b] transition-colors pointer-events-auto cursor-pointer">
                           <Trash2 size={14} />
                         </button>
                       </>
                     )}
                   </div>
-                  <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 italic tracking-wider absolute right-0 group-hover:opacity-0 transition-opacity">FinTrack Card</p>
+                  <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 italic tracking-wider absolute right-0 group-hover:opacity-0 transition-opacity pointer-events-none">FinTrack Card</p>
                 </div>
 
                 <div className="relative z-10">
