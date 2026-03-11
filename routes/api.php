@@ -15,6 +15,7 @@ use App\Http\Controllers\ShareController;
 */
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SubscriptionController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -50,4 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/share/follow', [ShareController::class, 'follow']);
     Route::delete('/share/unfollow/{id}', [ShareController::class, 'unfollow']);
     Route::get('/share/following', [ShareController::class, 'getFollowing']);
+
+    // Subscription routes
+    Route::post('/subscription/checkout', [SubscriptionController::class, 'createCheckoutSession']);
 });

@@ -24,6 +24,11 @@ class User extends Authenticatable
         'password',
         'sharing_code',
         'theme_color',
+        'stripe_id',
+        'subscription_status',
+        'trial_ends_at',
+        'subscription_ends_at',
+        'plan',
     ];
 
     /**

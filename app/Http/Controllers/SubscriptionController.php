@@ -9,6 +9,7 @@ use Stripe\Stripe;
 use Stripe\Customer;
 use Stripe\Checkout\Session as StripeSession;
 use App\Models\User;
+use Carbon\Carbon;
 
 class SubscriptionController extends Controller
 {
@@ -71,8 +72,17 @@ class SubscriptionController extends Controller
                 if ($user) {
                     $user->stripe_id = $session->customer;
                     $user->subscription_status = 'active';
-                    $user->plan = $session->display_items[0]->plan->id ?? null;
-                    $user->trial_ends_at = $session->subscription ? now()->addDays(14) : null;
+                    
+                    // Obter o ID do plano da assinatura
+                    if ($session->subscription) {
+                        $subscription = \Stripe\Subscription::retrieve($session->subscription);
+                        $user->plan = $subscription->items->data[0]->price->id ?? null;
+                        $user->trial_ends_at = $subscription->trial_end ? \Carbon\Carbon::createFromTimestamp($subscription->trial_end) : null;
+                    } else {
+                        $user->plan = null;
+                        $user->trial_ends_at = now()->addDays(14);
+                    }
+                    
                     $user->subscription_ends_at = null;
                     $user->save();
                 }

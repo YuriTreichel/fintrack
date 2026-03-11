@@ -37,6 +37,8 @@ import {
   X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import subscriptionApi from './api/subscriptionApi';
+import stripePlans from './config/stripePlans';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -404,11 +406,58 @@ const TransactionsMockup = () => (
 
 /* ===== LANDING PAGE ===== */
 export default function LandingPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubscribe = async (planType) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Verificar se o usuário está autenticado
+      const token = localStorage.getItem('token');
+      if (!token) {
+        // Redirecionar para login/registro
+        window.location.href = '/app';
+        return;
+      }
+
+      // Mapear o tipo de plano para o ID do Stripe
+      const planMap = {
+        'family': stripePlans.FAMILY_MONTHLY,
+        'premium': stripePlans.PREMIUM_MONTHLY,
+        'annual': stripePlans.ANNUAL
+      };
+
+      const stripePlanId = planMap[planType];
+      
+      if (!stripePlanId || stripePlanId.includes('XXXXXXXXXXXXX')) {
+        setError('Plano não configurado. Por favor, entre em contato com o suporte.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Redirecionar para checkout do Stripe
+      await subscriptionApi.redirectToCheckout(stripePlanId);
+    } catch (err) {
+      console.error('Subscription error:', err);
+      setError('Erro ao processar assinatura. Por favor, tente novamente.');
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#020617] text-zinc-100 font-['Inter'] selection:bg-[#98e5dd]/30 selection:text-white overflow-x-hidden">
       <DotPattern />
       <Nav />
+      
+      {/* Error Message */}
+      {error && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-[100] bg-red-500/10 border border-red-500/20 text-red-500 px-6 py-3 rounded-xl text-sm font-medium backdrop-blur-sm">
+          {error}
+          <button onClick={() => setError(null)} className="ml-4 text-red-400 hover:text-red-300">×</button>
+        </div>
+      )}
 
       {/* ===== HERO ===== */}
       <section id="inicio" className="relative pt-44 pb-20 md:pt-60 md:pb-40 px-6">
@@ -626,7 +675,13 @@ export default function LandingPage() {
                 <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Relatórios Consolidados</li>
                 <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Suporte Prioritário</li>
               </ul>
-              <Link to="/app" className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-black hover:bg-white/10 transition-all uppercase tracking-widest text-xs text-center block">Assinar Família</Link>
+              <button 
+                onClick={() => handleSubscribe('family')} 
+                disabled={isLoading}
+                className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-black hover:bg-white/10 transition-all uppercase tracking-widest text-xs text-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Processando...' : 'Assinar Família'}
+              </button>
             </motion.div>
 
             {/* Premium Mensal */}
@@ -642,7 +697,14 @@ export default function LandingPage() {
                 <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Relatórios Avançados</li>
                 <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Tema Personalizável</li>
               </ul>
-              <Link to="/app" className="w-full py-5 rounded-2xl bg-[#98e5dd] text-[#020617] font-black hover:brightness-110 transition-all uppercase tracking-widest text-xs text-center block" style={{ boxShadow: '0 0 25px rgba(152,229,221,0.25), 0 0 60px rgba(152,229,221,0.08)' }}>Assinar Premium</Link>
+              <button 
+                onClick={() => handleSubscribe('premium')} 
+                disabled={isLoading}
+                className="w-full py-5 rounded-2xl bg-[#98e5dd] text-[#020617] font-black hover:brightness-110 transition-all uppercase tracking-widest text-xs text-center disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ boxShadow: '0 0 25px rgba(152,229,221,0.25), 0 0 60px rgba(152,229,221,0.08)' }}
+              >
+                {isLoading ? 'Processando...' : 'Assinar Premium'}
+              </button>
             </motion.div>
 
             {/* Plano Anual */}
@@ -656,7 +718,13 @@ export default function LandingPage() {
                 <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Todas as features Premium</li>
                 <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Acesso antecipado a novidades</li>
               </ul>
-              <Link to="/app" className="w-full py-5 rounded-2xl bg-white/10 border border-white/5 text-white font-black hover:bg-white/20 transition-all uppercase tracking-widest text-xs text-center block">Assinar Anual</Link>
+              <button 
+                onClick={() => handleSubscribe('annual')} 
+                disabled={isLoading}
+                className="w-full py-5 rounded-2xl bg-white/10 border border-white/5 text-white font-black hover:bg-white/20 transition-all uppercase tracking-widest text-xs text-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Processando...' : 'Assinar Anual'}
+              </button>
             </motion.div>
           </div>
         </div>
