@@ -32,7 +32,9 @@ import {
   ChevronUp,
   MessageCircle,
   ArrowRightLeft,
-  Settings
+  Settings,
+  Menu,
+  X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -63,6 +65,7 @@ const scrollToSection = (id) => {
 /* ===== NAVIGATION WITH SCROLL EFFECT ===== */
 const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -70,42 +73,125 @@ const Nav = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <motion.nav
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 px-6 transition-all duration-500",
-        scrolled ? "py-3" : "py-6"
-      )}
-    >
-      <div className={cn(
-        "max-w-7xl mx-auto flex items-center justify-between rounded-2xl px-6 transition-all duration-500",
-        scrolled
-          ? "bg-[#020617]/70 backdrop-blur-xl border border-white/10 py-3 shadow-2xl shadow-black/20"
-          : "bg-transparent border border-transparent py-4"
-      )}>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[#98e5dd]/10 text-[#98e5dd] rounded-lg flex items-center justify-center">
-            <Wallet size={18} fill="currentColor" />
-          </div>
-          <span className="font-black text-2xl tracking-tighter text-white uppercase italic">FinTrack<span className="text-zinc-600">.</span></span>
-        </div>
-        
-        <div className="hidden md:flex items-center gap-10">
-          <button onClick={() => scrollToSection('inicio')} className="text-[13px] font-bold text-zinc-400 hover:text-white transition-colors uppercase tracking-widest cursor-pointer">Início</button>
-          <button onClick={() => scrollToSection('features')} className="text-[13px] font-bold text-zinc-400 hover:text-white transition-colors uppercase tracking-widest cursor-pointer">Recursos</button>
-          <button onClick={() => scrollToSection('como-funciona')} className="text-[13px] font-bold text-zinc-400 hover:text-white transition-colors uppercase tracking-widest cursor-pointer">Como Funciona</button>
-          <button onClick={() => scrollToSection('pricing')} className="text-[13px] font-bold text-zinc-400 hover:text-white transition-colors uppercase tracking-widest cursor-pointer">Planos</button>
-        </div>
+  const menuItems = [
+    { label: 'Início', id: 'inicio' },
+    { label: 'Recursos', id: 'features' },
+    { label: 'Como Funciona', id: 'como-funciona' },
+    { label: 'Planos', id: 'pricing' },
+  ];
 
-        <div className="flex items-center gap-6">
-          <Link to="/app" className="text-[13px] font-bold text-white hover:opacity-70 transition-all uppercase tracking-wider">Entrar</Link>
-          <Link to="/app" className="bg-[#98e5dd] text-[#020617] px-6 py-2.5 rounded-lg text-[13px] font-black hover:brightness-110 transition-all uppercase tracking-wider" style={{ boxShadow: '0 0 20px rgba(152,229,221,0.3), 0 0 60px rgba(152,229,221,0.1)' }}>Teste Grátis</Link>
+  return (
+    <>
+      <motion.nav
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 px-6 transition-all duration-500",
+          scrolled ? "py-3" : "py-6"
+        )}
+      >
+        <div className={cn(
+          "max-w-7xl mx-auto flex items-center justify-between rounded-2xl px-6 transition-all duration-500",
+          scrolled
+            ? "bg-[#020617]/70 backdrop-blur-xl border border-white/10 py-3 shadow-2xl shadow-black/20"
+            : "bg-transparent border border-transparent py-4"
+        )}>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-[#98e5dd]/10 text-[#98e5dd] rounded-lg flex items-center justify-center">
+              <Wallet size={18} fill="currentColor" />
+            </div>
+            <span className="font-black text-2xl tracking-tighter text-white uppercase italic">FinTrack<span className="text-zinc-600">.</span></span>
+          </div>
+          
+          <div className="hidden md:flex items-center gap-10">
+            {menuItems.map((item) => (
+              <button 
+                key={item.id}
+                onClick={() => scrollToSection(item.id)} 
+                className="text-[13px] font-bold text-zinc-400 hover:text-white transition-colors uppercase tracking-widest cursor-pointer"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="hidden md:flex items-center gap-6">
+            <Link to="/app" className="text-[13px] font-bold text-white hover:opacity-70 transition-all uppercase tracking-wider">Entrar</Link>
+            <Link to="/app" className="bg-[#98e5dd] text-[#020617] px-6 py-2.5 rounded-lg text-[13px] font-black hover:brightness-110 transition-all uppercase tracking-wider" style={{ boxShadow: '0 0 20px rgba(152,229,221,0.3), 0 0 60px rgba(152,229,221,0.1)' }}>Teste Grátis</Link>
+          </div>
+
+          {/* Hamburger button for mobile */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-white hover:bg-white/5 rounded-xl transition-colors"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
-      </div>
-    </motion.nav>
+      </motion.nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[60] bg-[#020617] md:hidden flex flex-col p-8"
+          >
+            <div className="flex items-center justify-between mb-12">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-[#98e5dd]/10 text-[#98e5dd] rounded-lg flex items-center justify-center">
+                  <Wallet size={18} fill="currentColor" />
+                </div>
+                <span className="font-black text-2xl tracking-tighter text-white uppercase italic">FinTrack<span className="text-zinc-600">.</span></span>
+              </div>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 text-zinc-400 hover:text-white transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <nav className="flex flex-col gap-6 mb-12">
+              {menuItems.map((item) => (
+                <button 
+                  key={item.id}
+                  onClick={() => {
+                    scrollToSection(item.id);
+                    setIsMobileMenuOpen(false);
+                  }} 
+                  className="text-2xl font-black text-white text-left uppercase tracking-tighter hover:text-[#98e5dd] transition-colors"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+
+            <div className="mt-auto space-y-4">
+              <Link 
+                to="/app" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-sm"
+              >
+                Entrar
+              </Link>
+              <Link 
+                to="/app" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center py-5 rounded-2xl bg-[#98e5dd] text-[#020617] font-black uppercase tracking-widest text-sm"
+                style={{ boxShadow: '0 0 20px rgba(152,229,221,0.3)' }}
+              >
+                Teste Grátis
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
