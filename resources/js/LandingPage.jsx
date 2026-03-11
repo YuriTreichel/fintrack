@@ -615,19 +615,21 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Plano Família */}
             <motion.div whileHover={{ y: -10 }} className="bg-zinc-900/40 border border-white/5 p-10 rounded-[40px] flex flex-col">
-              <div className="w-12 h-12 bg-zinc-800 rounded-2xl flex items-center justify-center mb-8"><Star size={20} className="text-zinc-500" /></div>
-              <h4 className="text-lg font-bold text-zinc-500 mb-2 uppercase tracking-widest">Experimental</h4>
-              <div className="text-5xl font-black text-white mb-4 italic">Grátis</div>
-              <p className="text-zinc-600 text-sm font-medium mb-10">Até 2 contas e 2 cartões. Explore por 14 dias.</p>
+              <div className="w-12 h-12 bg-zinc-800 rounded-2xl flex items-center justify-center mb-8"><Users size={20} className="text-zinc-500" /></div>
+              <h4 className="text-lg font-bold text-zinc-500 mb-2 uppercase tracking-widest">Plano Família</h4>
+              <div className="text-5xl font-black text-white mb-4 italic">R$ 34,90<span className="text-sm text-zinc-500 font-medium">/mês</span></div>
+              <p className="text-zinc-600 text-sm font-medium mb-10">Premium para até 3 perfis compartilhados.</p>
               <ul className="space-y-4 mb-12 flex-1">
-                <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Dashboard básico</li>
-                <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Command Palette</li>
-                <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Alertas de Vencimento</li>
+                <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> 3 Perfis Integrados</li>
+                <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Relatórios Consolidados</li>
+                <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Suporte Prioritário</li>
               </ul>
-              <Link to="/app" className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-black hover:bg-white/10 transition-all uppercase tracking-widest text-xs text-center block">Começar Grátis</Link>
+              <Link to="/app" className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-black hover:bg-white/10 transition-all uppercase tracking-widest text-xs text-center block">Assinar Família</Link>
             </motion.div>
 
+            {/* Premium Mensal */}
             <motion.div whileHover={{ y: -10 }} className="bg-zinc-900 border border-[#98e5dd]/30 p-10 rounded-[40px] flex flex-col relative animate-glow-card">
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#98e5dd] text-[#020617] text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full">Mais popular</div>
               <div className="w-12 h-12 bg-[#98e5dd]/10 rounded-2xl flex items-center justify-center mb-8"><Zap size={20} className="text-[#98e5dd]" /></div>
@@ -643,17 +645,18 @@ export default function LandingPage() {
               <Link to="/app" className="w-full py-5 rounded-2xl bg-[#98e5dd] text-[#020617] font-black hover:brightness-110 transition-all uppercase tracking-widest text-xs text-center block" style={{ boxShadow: '0 0 25px rgba(152,229,221,0.25), 0 0 60px rgba(152,229,221,0.08)' }}>Assinar Premium</Link>
             </motion.div>
 
+            {/* Plano Anual */}
             <motion.div whileHover={{ y: -10 }} className="bg-zinc-900/40 border border-white/5 p-10 rounded-[40px] flex flex-col">
-              <div className="w-12 h-12 bg-zinc-800 rounded-2xl flex items-center justify-center mb-8"><Users size={20} className="text-zinc-500" /></div>
-              <h4 className="text-lg font-bold text-zinc-500 mb-2 uppercase tracking-widest">Plano Família</h4>
-              <div className="text-5xl font-black text-white mb-4 italic">R$ 34,90<span className="text-sm text-zinc-500 font-medium">/mês</span></div>
-              <p className="text-zinc-600 text-sm font-medium mb-10">Premium para até 3 perfis compartilhados.</p>
+              <div className="w-12 h-12 bg-zinc-800 rounded-2xl flex items-center justify-center mb-8"><Star size={20} className="text-zinc-500" /></div>
+              <h4 className="text-lg font-bold text-zinc-500 mb-2 uppercase tracking-widest">Plano Anual</h4>
+              <div className="text-5xl font-black text-white mb-4 italic">R$ 199,90<span className="text-sm text-zinc-500 font-medium">/ano</span></div>
+              <p className="text-zinc-600 text-sm font-medium mb-10">Economize com a assinatura anual completa.</p>
               <ul className="space-y-4 mb-12 flex-1">
-                <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> 3 Perfis Integrados</li>
-                <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Relatórios Consolidados</li>
-                <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Suporte Prioritário</li>
+                <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> 2 meses grátis</li>
+                <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Todas as features Premium</li>
+                <li className="flex items-center gap-3 text-zinc-400 text-sm font-medium"><CheckCircle2 size={16} className="text-[#98e5dd]" /> Acesso antecipado a novidades</li>
               </ul>
-              <Link to="/app" className="w-full py-5 rounded-2xl bg-white/10 border border-white/5 text-white font-black hover:bg-white/20 transition-all uppercase tracking-widest text-xs text-center block">Assinar Família</Link>
+              <Link to="/app" className="w-full py-5 rounded-2xl bg-white/10 border border-white/5 text-white font-black hover:bg-white/20 transition-all uppercase tracking-widest text-xs text-center block">Assinar Anual</Link>
             </motion.div>
           </div>
         </div>
