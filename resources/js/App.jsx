@@ -34,7 +34,8 @@ import {
   Gamepad2, Scissors, Stethoscope, Pill, Building2, Landmark, HandCoins, PiggyBank,
   Banknote, Receipt, Shirt, Umbrella, Wrench, Paintbrush, Camera, TreePine, UtensilsCrossed,
   Wine, IceCream, Pizza, Salad, Droplets, Wifi, Globe, PartyPopper, Theater, Headphones,
-  Church, Star
+  Church, Star,
+  Menu, X
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend,
@@ -580,6 +581,7 @@ export default function App() {
     return localStorage.getItem('sidebarCollapsed') === 'true';
   });
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -1010,7 +1012,6 @@ export default function App() {
             )}
           </div>
         </div>
-        
         {/* Toggle Button */}
         <button 
           onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
@@ -1020,11 +1021,157 @@ export default function App() {
         </button>
       </aside>
 
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] md:hidden"
+            />
+            <motion.div 
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed left-0 top-0 bottom-0 w-80 bg-fin-bg z-[101] md:hidden flex flex-col shadow-2xl border-r border-zinc-900/10 dark:border-white/5"
+            >
+              <div className="p-8 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-fin-mint/10 flex items-center justify-center text-fin-mint">
+                    <Wallet size={18} fill="currentColor" strokeWidth={0} />
+                  </div>
+                  <h1 className="text-xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic">FinTrack<span className="text-zinc-400 dark:text-zinc-600">.</span></h1>
+                </div>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 rounded-xl hover:bg-zinc-900/10 dark:hover:bg-white/5 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
+                <div className="px-4 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Navegação</div>
+                <NavItem
+                  icon={<LayoutDashboard size={20} />}
+                  label="Dashboard"
+                  active={activeTab === 'dashboard'}
+                  onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }}
+                />
+                <NavItem
+                  icon={<Wallet size={20} />}
+                  label="Contas"
+                  active={activeTab === 'accounts'}
+                  onClick={() => { setActiveTab('accounts'); setIsMobileMenuOpen(false); }}
+                />
+                <NavItem
+                  icon={<ArrowRightLeft size={20} />}
+                  label="Transações"
+                  active={activeTab === 'transactions'}
+                  onClick={() => { setActiveTab('transactions'); setIsMobileMenuOpen(false); }}
+                />
+                <NavItem
+                  icon={<CreditCard size={20} />}
+                  label="Cartões"
+                  active={activeTab === 'cards'}
+                  onClick={() => { setActiveTab('cards'); setIsMobileMenuOpen(false); }}
+                />
+                
+                <div className="px-4 pt-4 pb-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Recursos</div>
+                <NavItem
+                  icon={<BarChart3 size={20} />}
+                  label="Relatórios"
+                  active={activeTab === 'reports'}
+                  onClick={() => { setActiveTab('reports'); setIsMobileMenuOpen(false); }}
+                />
+                <NavItem
+                  icon={<Tag size={20} />}
+                  label="Categorias"
+                  active={activeTab === 'categories'}
+                  onClick={() => { setActiveTab('categories'); setIsMobileMenuOpen(false); }}
+                />
+                <NavItem
+                  icon={<Users size={20} />}
+                  label="Compartilhar"
+                  active={isShareModalOpen}
+                  onClick={() => { setIsShareModalOpen(true); setIsMobileMenuOpen(false); }}
+                />
+                <NavItem
+                  icon={<Settings size={20} />}
+                  label="Configurações"
+                  active={activeTab === 'settings'}
+                  onClick={() => { setActiveTab('settings'); setIsMobileMenuOpen(false); }}
+                />
+
+                <div className="px-4 pt-4 pb-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Perfis</div>
+                <NavItem
+                  icon={<User size={20} />}
+                  label="Meu Painel"
+                  active={selectedProfile?.id === user?.id}
+                  onClick={() => { setSelectedProfile(user); setIsMobileMenuOpen(false); }}
+                  variant="profile"
+                />
+                {following.map(follow => (
+                  <NavItem
+                    key={follow.id}
+                    icon={<div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors", selectedProfile?.id === follow.id ? "bg-fin-mint text-fin-bg" : "bg-fin-mint/20 text-fin-mint")}>{follow.name.charAt(0)}</div>}
+                    label={follow.name}
+                    active={selectedProfile?.id === follow.id}
+                    onClick={() => { setSelectedProfile(follow); setIsMobileMenuOpen(false); }}
+                    variant="profile"
+                  />
+                ))}
+              </div>
+
+              <div className="p-6 border-t border-zinc-900/10 dark:border-white/5 space-y-4">
+                <div className="flex items-center gap-3 px-2">
+                  <div className="w-10 h-10 rounded-full bg-zinc-800 flex flex-shrink-0 items-center justify-center font-bold text-fin-mint border-2 border-zinc-700">
+                    {user?.name?.charAt(0) || 'U'}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm truncate text-zinc-900 dark:text-white">{user?.name || 'Usuário'}</p>
+                    <p className="text-[10px] text-zinc-500 truncate">{user?.email}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setToken(null);
+                    setUser(null);
+                    localStorage.setItem('token', '');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-[#ff7b7b]/10 text-[#ff7b7b] rounded-2xl font-bold text-sm border border-[#ff7b7b]/20 hover:bg-[#ff7b7b]/20 transition-all"
+                >
+                  <LogOut size={16} />
+                  Sair do Sistema
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Main Content */}
       <main className={cn(
         "flex-1 p-4 md:p-10 pb-24 md:pb-10 min-w-0 max-w-[1400px] mx-auto transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]",
         isSidebarCollapsed ? "md:ml-20" : "md:ml-[260px]"
       )}>
+        {/* Mobile Header */}
+        <header className="flex md:hidden items-center justify-between mb-6">
+          <button 
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="p-3 rounded-xl bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors min-h-[44px] text-zinc-900 dark:text-white"
+            aria-label="Abrir menu"
+          >
+            <Menu size={20} />
+          </button>
+          <h1 className="text-lg font-black text-zinc-900 dark:text-white uppercase italic">FinTrack</h1>
+          <div className="w-10"></div> {/* Spacer for centering */}
+        </header>
         <header className="hidden md:flex items-center justify-between mb-10">
           <div className="flex-1 max-w-md relative group">
             <div className="relative">
