@@ -72,12 +72,11 @@ class TransactionController extends Controller
                 }
             }
 
-            // Treat 'is_fixed' as a 10-year monthly repetition
+            // Fixed transactions are just marked as fixed - they don't automatically repeat
+            // Users can manually set repetition if they want
             if (isset($data['is_fixed']) && $data['is_fixed']) {
-                $data['is_repeated'] = true;
-                $data['repeat_times'] = 120; // 10 years
-                $data['repeat_period'] = 'monthly';
-                $data['repeat_frequency'] = 1;
+                // Don't automatically set repetition for fixed transactions
+                // Fixed is just a flag to identify recurring expenses/income
             }
 
             if (isset($data['is_repeated']) && $data['is_repeated'] && isset($data['repeat_times']) && $data['repeat_times'] > 1) {
